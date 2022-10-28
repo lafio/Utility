@@ -1,9 +1,10 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import readExcelVue from '../components/readExcel.vue';
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <readExcelVue />
+
   </main>
 </template>
