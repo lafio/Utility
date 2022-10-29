@@ -4,8 +4,8 @@
     drag
     accept=".xlsx"
     multiple
-    limit="1"
-    http-request="httpRequest"
+    :limit="1"
+    :http-request="httpRequest"
   >
     <img alt="upload logo" class="logo" src="@/assets/upload.svg" width="125" height="125" />
     <div class="el-upload__text">
@@ -48,15 +48,18 @@ export default{
             type: 'binary'
           })
           // 取第一张表
+          console.log("----print first sheet----")
           console.log(workbook)
           const exlname = workbook.SheetNames[0]
           const exl = XLSX.utils.sheet_to_json(workbook.Sheets[exlname]) // 生成json表格内容
+          console.log("----print json----")
           console.log(exl)
           // 将 JSON 数据挂到 data 里
           let arr = []
           exl.forEach(item => {
             arr.push(item.name)
           })
+          console.log("----print array----")
           console.log(arr)
         } catch (e) {
           console.log('error')
