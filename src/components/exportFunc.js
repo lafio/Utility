@@ -1,4 +1,18 @@
+import { resultProps } from "element-plus";
 import * as XLSX from "xlsx"
+
+//数据处理：
+//1、读取模板文件
+//2、抽取目标数据放到模板文件里，返回成果sheet
+export function trans(sheet){
+    // var tempWorkbook = XLSX.readFile('../../template.xlsx',{});
+    // const tempName = tempWorkbook.SheetNames[0];
+    // const worksheet = workbook.Sheets[tempName];
+    
+    // var result = worksheet;
+    // return result;
+}
+
 // 将一个sheet转成最终的excel文件的blob对象，然后利用URL.createObjectURL下载
 export function sheet2blob(sheet, sheetName) {
     sheetName = sheetName || 'sheet1';

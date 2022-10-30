@@ -6,14 +6,15 @@
     multiple
     :limit="3"
     :http-request="httpRequest"
+    :on-exceed="handleExceed"
   >
     <img alt="upload logo" class="logo" src="@/assets/upload.svg" width="125" height="125" />
     <div class="el-upload__text">
-      Drop file here or <em>click to upload</em>
+      拖拽文件到此处或者 <em>点击上传</em>
     </div>
     <template #tip>
       <div class="el-upload__tip">
-        jpg/png files with a size less than 500kb
+        你上传的excel文件名会显示在这里
       </div>
     </template>
   </el-upload>
@@ -21,7 +22,7 @@
 
 <script>
 import * as XLSX from 'xlsx'
-import {sheet2blob,openDownloadDialog} from './exportFunc.js'
+import {sheet2blob,openDownloadDialog,trans} from './exportFunc.js'
 
 export default{
   methods: {
@@ -29,7 +30,7 @@ export default{
       return this.$confirm(`确定移除 ${file.name}？`)
     },
     handleExceed (files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+      this.$message.warning(`最多导入 3 个文件（总要有个限制吧。。），请刷新页面来导入新的文件！！`)
     },
     httpRequest (e) {
       let file = e.file // 文件信息
@@ -56,6 +57,9 @@ export default{
           const exl = XLSX.utils.sheet_to_json(worksheet) // 生成json表格内容
           console.log("----print json----")
           console.log(exl)
+
+          //数据处理
+          trans(worksheet)
 
           //下载数据
           openDownloadDialog(sheet2blob(worksheet),'下载.xlsx')
