@@ -4,7 +4,7 @@
     drag
     accept=".xlsx"
     multiple
-    :limit="1"
+    :limit="3"
     :http-request="httpRequest"
   >
     <img alt="upload logo" class="logo" src="@/assets/upload.svg" width="125" height="125" />
@@ -21,6 +21,7 @@
 
 <script>
 import * as XLSX from 'xlsx'
+import {sheet2blob,openDownloadDialog} from './exportFunc.js'
 
 export default{
   methods: {
@@ -51,18 +52,23 @@ export default{
           console.log("----print first sheet----")
           console.log(workbook)
           const exlname = workbook.SheetNames[0]
-          const exl = XLSX.utils.sheet_to_json(workbook.Sheets[exlname]) // 生成json表格内容
+          const worksheet = workbook.Sheets[exlname]
+          const exl = XLSX.utils.sheet_to_json(worksheet) // 生成json表格内容
           console.log("----print json----")
           console.log(exl)
+
+          //下载数据
+          openDownloadDialog(sheet2blob(worksheet),'下载.xlsx')
           // 将 JSON 数据挂到 data 里
-          let arr = []
-          exl.forEach(item => {
-            arr.push(item.name)
-          })
-          console.log("----print array----")
-          console.log(arr)
+          // let arr = []
+          // exl.forEach(item => {
+          //   arr.push(item.name)
+          // })
+          // console.log("----print array----")
+          // console.log(arr)
+
         } catch (e) {
-          console.log('error')
+          console.log('error'+e)
           return false
         }
       }
