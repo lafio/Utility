@@ -22,7 +22,9 @@
 
 <script>
 import * as XLSX from 'xlsx'
+import {templateXLSX} from './template.js'
 import {sheet2blob,openDownloadDialog,trans} from './exportFunc.js'
+
 
 export default{
   methods: {
@@ -59,10 +61,10 @@ export default{
           console.log(exl)
 
           //数据处理
-          trans(worksheet)
+          var result_sheet=trans(templateXLSX,worksheet)  // （模板js变量，上传的excel的sheet）
 
           //下载数据
-          openDownloadDialog(sheet2blob(worksheet),'下载.xlsx')
+          openDownloadDialog(sheet2blob(result_sheet),'你要的用例.xlsx')
           // 将 JSON 数据挂到 data 里
           // let arr = []
           // exl.forEach(item => {
