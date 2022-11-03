@@ -1,4 +1,4 @@
-export var templateXLSX = [
+export var templateJSON = [
     {
         "缺陷验证系统测试用例": "模块描述",
         "__EMPTY": "简单描述该模块要实现的功能"

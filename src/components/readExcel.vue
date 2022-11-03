@@ -22,7 +22,7 @@
 
 <script>
 import * as XLSX from 'xlsx'
-import {templateXLSX} from './template.js'
+import {templateJSON} from './template.js'
 import {sheet2blob,openDownloadDialog,trans} from './exportFunc.js'
 
 
@@ -61,7 +61,7 @@ export default{
           console.log(exl)
 
           //数据处理
-          var result_sheet=trans(templateXLSX,worksheet)  // （模板js变量，上传的excel的sheet）
+          var result_sheet=trans(templateJSON,exl)  // （模板js变量，目标json）
 
           //下载数据
           openDownloadDialog(sheet2blob(result_sheet),'你要的用例.xlsx')
