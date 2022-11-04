@@ -62,9 +62,11 @@ export default{
 
           //数据处理
           var result_sheet=trans(templateJSON,exl)  // （模板js变量，目标json）
+          //判断转换结果，如果正确，才允许下载
           alert('数据转换完成，即将开始下载！')
           //下载数据
-          openDownloadDialog(sheet2blob(result_sheet),'你要的用例.xlsx')
+          openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'你要的用例.xlsx')
+
           // 将 JSON 数据挂到 data 里
           // let arr = []
           // exl.forEach(item => {

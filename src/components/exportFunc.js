@@ -18,7 +18,7 @@ export function trans(templateJSON,exljson){
             "缺陷验证系统测试用例": 'qxyz'+i,
             "__EMPTY": '',
             "__EMPTY_1": '',
-            "__EMPTY_2": '',
+            "__EMPTY_2": exl[i-1]['测试模块'],
             "__EMPTY_3": '',
             "__EMPTY_4": '',
             "__EMPTY_5": 'Y',
