@@ -4,7 +4,7 @@
     drag
     accept=".xlsx"
     multiple
-    :limit="3"
+    :limit="1"
     :http-request="httpRequest"
     :on-exceed="handleExceed"
   >
@@ -32,7 +32,7 @@ export default{
       return this.$confirm(`确定移除 ${file.name}？`)
     },
     handleExceed (files, fileList) {
-      this.$message.warning(`最多导入 3 个文件（总要有个限制吧。。），请刷新页面来导入新的文件！！`)
+      this.$message.warning(`最多导入 1 个文件，请刷新页面来导入新的文件！！`)
     },
     httpRequest (e) {
       let file = e.file // 文件信息
@@ -52,19 +52,19 @@ export default{
             type: 'binary'
           })
           // 取第一张表
-          // console.log("----print first sheet----")
-          // console.log(workbook)
+
           const exlname = workbook.SheetNames[0]
           const worksheet = workbook.Sheets[exlname]
+          console.log(worksheet.cells['A2'].l.target)
+
           const exl = XLSX.utils.sheet_to_json(worksheet) // 生成json表格内容
-          // console.log("----print json----")
-          // console.log(exl)
 
           //数据处理
           var result_sheet=trans(templateJSON,exl)  // （模板js变量，目标json）
-          //判断转换结果，如果正确，才允许下载
+
           alert('数据转换完成，即将开始下载！')
           //下载数据
+
           openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'你要的用例.xlsx')
 
           // 将 JSON 数据挂到 data 里
