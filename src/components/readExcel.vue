@@ -55,7 +55,6 @@ export default{
 
           const exlname = workbook.SheetNames[0]
           const worksheet = workbook.Sheets[exlname]
-          console.log(worksheet.cells['A2'].l.target)
 
           const exl = XLSX.utils.sheet_to_json(worksheet) // 生成json表格内容
 
