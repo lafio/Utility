@@ -14,7 +14,12 @@
     </div>
     <template #tip>
       <div class="el-upload__tip">
-        你上传的excel文件名会显示在这里
+        <h3>
+          使用说明<br /><br />
+          1、从你的项目OA中导出缺陷列表，内容选择全部即可，得到缺陷列表.XLSX <br /><br /> 
+          2、将缺陷列表.XLSX上传到这里  <br /> <br /> 
+          3、等待2-3秒后，你要的用例会自动下载。注意：需要你使用excel打开该文件并保存一次后，才能上传ET
+        </h3>
       </div>
     </template>
   </el-upload>
@@ -64,7 +69,7 @@ export default{
           alert('数据转换完成，即将开始下载！')
           //下载数据
 
-          openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'你要的用例.xlsx')
+          openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'使用excel保存一次这个文件再上传ET.xlsx')
 
           // 将 JSON 数据挂到 data 里
           // let arr = []

@@ -1,10 +1,7 @@
-<script setup>
-import readExcelVue from '../components/readExcel.vue';
+<script>
+
 </script>
 
 <template>
-  <main>
-    <readExcelVue />
-
-  </main>
+  <h1>我是主页</h1>
 </template>

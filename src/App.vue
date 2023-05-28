@@ -5,14 +5,15 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/dog.jpg" width="125" height="125" />
+    <!-- <img alt="Vue logo" class="logo" src="@/assets/dog.jpg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <HelloWorld msg="缺陷转用例工具" />
+      <HelloWorld msg="小工具平台" />
 
       <nav>
         <RouterLink to="/">主页</RouterLink>
-        <RouterLink to="/about">使用说明</RouterLink>
+        <RouterLink to="/translater">缺陷转用例工具</RouterLink>
+        <RouterLink to="/QRcodeGenerater">二维码生成工具</RouterLink>
       </nav>
     </div>
   </header>
@@ -21,6 +22,7 @@ import HelloWorld from './components/HelloWorld.vue'
 </template>
 
 <style scoped>
+
 header {
   line-height: 1.5;
   max-height: 100vh;
