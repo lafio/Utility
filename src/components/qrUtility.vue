@@ -24,6 +24,7 @@ export default {
   },
   methods:{
     refresh(){
+      console.log(typeof navigator.clipboard)
         navigator.clipboard
       .readText()
       .then((text) => {
