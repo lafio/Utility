@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <qrcode-vue :value="url" :size="size" level="H" @click="refresh"></qrcode-vue>
+        <qrcode-vue :value="url" :size="size" level="H" 
+        :style="{border:'20px solid white'}" @click="refresh"></qrcode-vue>
         <input type="text" v-model="url" placeholder="请输入内容" />
         <h5>刷新页面 或者 点击二维码，会自动获取你剪切板的内容</h5>
     </div>
