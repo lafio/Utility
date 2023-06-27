@@ -8,7 +8,7 @@ import HelloWorld from './components/HelloWorld.vue'
     <!-- <img alt="Vue logo" class="logo" src="@/assets/dog.jpg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <HelloWorld msg="工具箱" />
+      <HelloWorld msg="==工具箱==" />
 
       <nav>
         <RouterLink to="/">主页</RouterLink>
