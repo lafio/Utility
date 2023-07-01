@@ -12,8 +12,9 @@ import HelloWorld from './components/HelloWorld.vue'
 
       <nav>
         <RouterLink to="/">主页</RouterLink>
-        <RouterLink to="/translater">缺陷转用例工具</RouterLink>
-        <RouterLink to="/QRcodeGenerater">二维码生成工具</RouterLink>
+        <RouterLink to="/translater">缺陷转用例</RouterLink>
+        <RouterLink to="/QRcodeGenerater">二维码生成</RouterLink>
+        <RouterLink to="/charGenerater">随机字符生成</RouterLink>
       </nav>
     </div>
   </header>
