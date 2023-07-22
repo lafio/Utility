@@ -69,7 +69,7 @@ export default{
           alert('数据转换完成，即将开始下载！')
           //下载数据
 
-          openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'使用excel保存一次这个文件再上传ET.xlsx')
+          openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'result.xlsx')
 
           // 将 JSON 数据挂到 data 里
           // let arr = []

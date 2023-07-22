@@ -5,23 +5,27 @@ import * as XLSX from "xlsx"
 //1、读取模板文件
 //2、抽取目标数据放到模板文件里，返回成果sheet
 export function trans(templateJSON,exljson){
-
+    // 筛选出“检出活动”为“系统测试”和“软件集成测试”的内容
+    var exl_origin = exljson.filter(function(e){
+        return e['检出活动']=='软件集成测试'
+        || e['检出活动']=='系统测试'
+    })
     // 筛选出以下类型的缺陷  'Solved','Not a bug','Delay/Can not reproduce'
-    var exl=exljson.filter(function(e){
+    var exl=exl_origin.filter(function(e){
         return e['缺陷状态']=='Solved' 
         || e['缺陷状态']=='Not a bug' 
         || e['缺陷状态']=='Delay/Can not reproduce'
     })
-    console.log(exl.length)
     for(var i=1;i<=exl.length;i++){
+        console.log(exl[i-1]['缺陷ID'])
         var temp={
             "缺陷验证系统测试用例": 'qxyz'+i,
-            "__EMPTY": '',
-            "__EMPTY_1": '',
+            "__EMPTY": exl[i-1]['测试环境'],
+            "__EMPTY_1": exl[i-1]['测试模块'],
             "__EMPTY_2": exl[i-1]['测试模块'],
             "__EMPTY_3": '',
             "__EMPTY_4": '',
-            "__EMPTY_5": 'Y',
+            "__EMPTY_5": '',
             "__EMPTY_6": '',
             "__EMPTY_7": '',
             "__EMPTY_8": exl[i-1]['标题']+'\n\n'+exl[i-1]['缺陷ID'],
