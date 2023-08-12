@@ -2,16 +2,20 @@
 <transition name="fade">
    <div v-if="showCopied" class="copied">已复制</div>
 </transition>
-<pre ref="text" @click="copyText">{{randomStr}}</pre>
+<div class = "resultStyle" v-if="enableShuffle" ref="text" @click="copyText">{{randomStr}}</div>
+<div class = "resultStyle" v-if="!enableShuffle" ref="text" @click="copyText">{{notRandomStr}}</div>
 <div>
     <div v-for="i in 6" :key="i">
       <input type="checkbox" v-model="aaa[i-1]" v-bind:true-value="1" v-bind:false-value="0">
       <label>{{ names[i-1] }}</label>
     </div>
+  <br/>
+    <input type="checkbox" v-model="enableShuffle" v-bind:true-value="1" v-bind:false-value="0">
+    <label>打乱顺序</label>
 </div>
 <div>
     <p>字符长度</p>
-    <input v-model="numLen" placeholder="请输入字符长度">
+    <input v-model="numLen" type="number" placeholder="请输入字符长度">
 </div>
 <el-button @click="generateRandomStr()" 
 style="margin-top: 20px; margin-bottom: 20px;">生成随机字符</el-button>
@@ -70,7 +74,9 @@ function randomString(len,aa) {
     }
     result += getRandomS(listAll[m],r)
   }
-  return shuffle(result)
+  // console.log("result:",result)
+  // console.log("shuffle result:",shuffle(result))
+  return [result,shuffle(result)]
 }
 
 
@@ -78,8 +84,10 @@ export default {
   data() {
     return {
       randomStr: '',
+      notRandomStr:'',
       numLen:32,
       showCopied: false,
+      enableShuffle: false,
       aaa: [1, 1, 1, 1, 1, 0],
       names:['大写字母','小写字母','数字','中文','符号','空格']
     };
@@ -87,9 +95,10 @@ export default {
   methods: {
     generateRandomStr() {
       console.log(this.aaa)
-      this.randomStr = randomString(this.numLen,this.aaa);
-      console.log(this.randomStr)
-      console.log(this.randomStr.length)
+      var list_result = randomString(this.numLen,this.aaa);
+      this.notRandomStr = list_result[0]
+      this.randomStr = list_result[1]
+      console.log(this.notRandomStr.length)
     },
     copyText() {
       const text = this.$refs.text.innerText;
@@ -108,10 +117,14 @@ export default {
 </script>
 
 <style scoped>
-pre {
-  font-size: 30px;
-  white-space: pre-wrap;
+.resultStyle {
+  font-size: 25px;
+  white-space: nowrap;
   margin-bottom:30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height:50px;
+  max-width: 500px;
 }
 
 div {
@@ -121,7 +134,7 @@ div {
 
 label {
   margin-left: 10px;
-  font-size: 15px;
+  font-size: 20px;
 }
 
 input {
