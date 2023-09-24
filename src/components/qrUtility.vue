@@ -7,7 +7,8 @@
     </div>
     <div class = "charNum">
       <label>输入内容有 {{ charCount }} 个字符</label>
-      <label>输入内容有 {{ byteLength }} 个字节(UTF-8编码)</label>
+      <label>输入内容有 {{ utf8Length }} 个字节(UTF-8编码)</label>
+      <label>输入内容有 {{ gbkLength }} 个字节(gbk编码)</label>
     </div>
   </template>
 
@@ -22,26 +23,44 @@ export default {
     return {
       url: "https://www.bing.com", // 这里可以是你从后台获取的链接
       size: 250, // 这里可以是你想要的大小
-      charCount:0,
-      byteLength:0
     };
   },
   mounted() {
     this.refresh();
   },
+  computed:{
+    charCount(){
+      return this.url.length;
+    },
+    utf8Length(){
+      return this.url.replace(/[\u0000-\u007f]/g,"a")
+        .replace(/[\u0080-\u07ff]/g,"aa")
+        .replace(/[\u0800-\uffff]/g,"aaa").length;
+    },
+    gbkLength(){
+      var count = 0;
+      if(this.url){
+        for(var i = 0; i<this.url.length; i++){
+          if(this.url.charCodeAt(i) > 255){
+            count += 2;
+          }else{
+            count += 1;
+          }
+        }
+        return count
+      }else{
+        return 0;
+      }
+      
+    }
+  },
   methods:{
     refresh(){
-      console.log(typeof navigator.clipboard)
-        navigator.clipboard
+      // console.log(typeof navigator.clipboard)
+      navigator.clipboard
       .readText()
       .then((text) => {
         this.url = text;
-        this.charCount = this.url.length;
-        this.byteLength = this.url.replace(/[\u0000-\u007f]/g,"a")
-        .replace(/[\u0080-\u07ff]/g,"aa")
-        .replace(/[\u0800-\uffff]/g,"aaa").length;
-        console.log(this.byteLength);
-
       })
       .catch((err) => {
         console.error("读取剪切板失败", err);
