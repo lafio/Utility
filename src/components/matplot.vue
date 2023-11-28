@@ -8,8 +8,9 @@
   <script>
 import * as XLSX from 'xlsx'
 // Import chart.js and register it as a global plugin.
-import Chart from "chart.js/auto";
-import moment from 'moment';
+import Chart, { registerables } from "chart.js/auto"
+import moment from 'moment'
+import 'chartjs-adapter-moment';
 window.Chart = Chart;
   
   export default {
@@ -37,16 +38,25 @@ window.Chart = Chart;
           this.data = XLSX.utils.sheet_to_json(wb.Sheets[this.sheetName]);
 
             for (const row of this.data) {
-            const x = moment(row['time']);//.format('YYYY-MM-DD HH:mm:ss');
-            // const x = row['time'];
+            // const x = moment(row['time']).format('YYYY-MM-DD HH:mm:ss');
+            const x = row['time'];
             const y = row['capacity'];
-            this.points.push({x, y});
+            this.points.push([x, y]);
             // this.points.push(y);
             // console.log("x:"+x+",y:"+y);
             };
-            this.renderChart(this.points);
+            // console.log(this.points);
+            console.log(this.points[0][0],this.points[this.points.length-1][0]);
+            this.plotnow()
             };
         reader.readAsBinaryString(file);
+      },
+      plotnow(){
+        if(this.points.length > 0){
+          this.renderChart(this.points);
+        }else{
+          alert("数据为空！")
+        }
       },
       renderChart(data) {
     // Get the context of the Chart.js canvas element we want to select.
@@ -54,23 +64,53 @@ window.Chart = Chart;
 
     // Create a new Chart object with the retrieved canvas context.
     new Chart(ctx, {
-      type: 'scatter', // 设置类型为散点图
-      data: {
+      type:"scatter",
+      data:{
         datasets: [{
-          label: 'capacity',
-          data: data, // 使用前面定义的 points 变量作为数据源
-          backgroundColor: '#f87979',
-          borderColor: '#f87979',
-        }],
+        data: data,
+        label: 'capacity',
+        backgroundColor: '#f87979',
+        borderColor: '#f87979',
+        pointRadius: 1,
+        pointSize: 1
+      }]
       },
       options: {
-        scales: {
-          x: {
-            type: 'linear', // 设置 x 轴为线性轴
-            position: 'bottom', // 设置 x 轴位于底部
+        animate:false,
+        // responsive: true, // 开启响应式功能
+        // maintainAspectRatio: false, // 关闭图表的比例限制
+        scales:{
+          xAxes: {
+            // type: 'linear', // 设置 x 轴为线性轴
+            type: 'time', // 设置 x 轴为线性轴
+            // position: 'bottom', // 设置 x 轴位于底部
+            min: data[0][0],
+            max: data[data.length-1][0],
+            time: {
+                displayFormats: {
+                    day: 'MM-DD',
+                    minute: 'HH:mm'
+                },
+                adapters: {
+                date: {
+                    parse: function(value) {
+                        return moment(value).toDate();
+                    },
+                    format: function(value, context) {
+                        return moment(value).format('YYYY-MM-DD HH:mm');
+                    },
+                    // tooltipFormat: 'lll'
+                }
+            }
+            },
           },
-          y: {
-            type: 'linear', // 设置 y 轴为线性轴
+          yAxes: {
+            // type: 'linear', // 设置 y 轴为线性轴
+            display: true,
+            title: {
+              display: true,
+              text: 'capacity'
+            }
           },
         },
       },
