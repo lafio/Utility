@@ -2,6 +2,7 @@
     <div>
       <input type="file" @change="onFileChange">
       <canvas ref="myChart"></canvas>
+      <span class = "CSSofkeyPointsResult" :textContent="this.keyPointsResult"></span>
     </div>
 </template>
   
@@ -24,6 +25,7 @@ window.Chart = Chart;
         data: [],
         points:[],
         keyPoints:[],
+        keyPointsResult:'',
         chart:null,
         chartData: {   
           datasets: [{
@@ -104,7 +106,7 @@ window.Chart = Chart;
             const y = row['capacity'];
             this.points.push([x, y]);
             // 获取满电和低电量的值
-            if(y === 100 || y<= 5){
+            if(y == 100 || y<= 5){
               this.keyPoints.push([x, y]);
             }
             };
@@ -113,30 +115,30 @@ window.Chart = Chart;
               let nowValue = this.keyPoints[i][1];
               let lastValue = this.keyPoints[i-1][1];
               let nextValue = this.keyPoints[i+1][1];
-              if(nowValue === 100){
-                if(lastValue === 100 && nextValue === 100){
-                  this.keyPoints.slice(i,1);
+              if(nowValue == 100){
+                if(lastValue == 100 && nextValue == 100){
+                  this.keyPoints.splice(i,1);
                 }
-              }else if(lastValue === 100){
+              }else if(lastValue == 100){
                 if(nowValue >= nextValue){
-                  this.keyPoints.slice(i,1)
+                  this.keyPoints.splice(i,1)
                 }
-              }else if(nextValue === 100){
-                if(nowValue >= lastValue){
-                  this.keyPoints.slice(i,1)
+              }else if(nextValue == 100){
+                if(nowValue > lastValue){
+                  this.keyPoints.splice(i,1)
                 }
-              }else if(lastValue !== 100 && nextValue !== 100){
-                if(nowValue >= nextValue){
-                  this.keyPoints.slice(i,1)
-                }
+              }else if(lastValue != 100 && nextValue != 100){
+                this.keyPoints.splice(i,1)
               }
             }  
             // console.log(this.points);
-            let keyPoints = '';
+            let keyPointsResult = '';
             this.keyPoints.forEach(element => {
-              keyPoints += element[0]+":"+element[1]+"\n";
+              keyPointsResult += element[0]+":"+element[1]+"\n";
             });
-            this.chartlabelnow = this.points[0][0] + '   -   '+this.points[this.points.length-1][0] + '\n' + keyPoints;
+            console.log(keyPointsResult);
+            this.keyPointsResult = keyPointsResult;
+            this.chartlabelnow = this.points[0][0] + '   -   '+this.points[this.points.length-1][0];
             console.log(this.chartlabelnow);
             this.updateChart();
             };
@@ -157,7 +159,6 @@ window.Chart = Chart;
       updateChart() {   
         if (this.chart) {   
           this.chart.destroy();   
-          console.log("清空图表")
         }   
         this.chartData.datasets[0].data = this.points;
         this.chartData.datasets[0].label = this.chartlabelnow;
@@ -173,3 +174,9 @@ window.Chart = Chart;
 },
 };
   </script>
+
+<style>
+.CSSofkeyPointsResult {
+  white-space: pre-wrap;
+}
+</style>
