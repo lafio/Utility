@@ -1,7 +1,7 @@
 <template>
     <div>
       <input type="file" @change="onFileChange">
-      <canvas id="myChart"></canvas>
+      <canvas ref="myChart"></canvas>
     </div>
 </template>
   
@@ -20,62 +20,22 @@ window.Chart = Chart;
         file: null,
         workbook: null,
         sheetName: '',
+        chartlabelnow: '',
         data: [],
         points:[],
-      };
-    },
-    methods: {
-      onFileChange(e) {
-        const file = e.target.files[0];
-        this.file = file;
-  
-        // Read the Excel file using XLSX library.
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const binaryString = e.target.result;
-          const wb = XLSX.read(binaryString, {type: 'binary'});
-          this.sheetName = wb.SheetNames[0];
-          this.data = XLSX.utils.sheet_to_json(wb.Sheets[this.sheetName]);
-
-            for (const row of this.data) {
-            // const x = moment(row['time']).format('YYYY-MM-DD HH:mm:ss');
-            const x = row['time'];
-            const y = row['capacity'];
-            this.points.push([x, y]);
-            // this.points.push(y);
-            // console.log("x:"+x+",y:"+y);
-            };
-            // console.log(this.points);
-            console.log(this.points[0][0],this.points[this.points.length-1][0]);
-            this.plotnow()
-            };
-        reader.readAsBinaryString(file);
-      },
-      plotnow(){
-        if(this.points.length > 0){
-          this.renderChart(this.points);
-        }else{
-          alert("数据为空！")
-        }
-      },
-      renderChart(data) {
-    // Get the context of the Chart.js canvas element we want to select.
-    const ctx = document.getElementById('myChart').getContext('2d');
-
-    // Create a new Chart object with the retrieved canvas context.
-    new Chart(ctx, {
-      type:"scatter",
-      data:{
-        datasets: [{
-        data: data,
-        label: 'capacity',
-        backgroundColor: '#f87979',
-        borderColor: '#f87979',
-        pointRadius: 1,
-        pointSize: 1
-      }]
-      },
-      options: {
+        keyPoints:[],
+        chart:null,
+        chartData: {   
+          datasets: [{
+          data: [["2023-11-30 18:24",45],["2023-11-30 18:25",46],["2023-11-30 18:26",47]],
+          label: 'capacity',
+          backgroundColor: '#f87979',
+          borderColor: '#f87979',
+          pointRadius: 1,
+          pointSize: 1
+        }]
+      },   
+      chartOptions: {   
         animate:false,
         // responsive: true, // 开启响应式功能
         // maintainAspectRatio: false, // 关闭图表的比例限制
@@ -84,8 +44,8 @@ window.Chart = Chart;
             // type: 'linear', // 设置 x 轴为线性轴
             type: 'time', // 设置 x 轴为线性轴
             // position: 'bottom', // 设置 x 轴位于底部
-            min: data[0][0],
-            max: data[data.length-1][0],
+            // min: data[0][0],
+            // max: data[data.length-1][0],
             time: {
                 displayFormats: {
                     day: 'MM-DD',
@@ -112,10 +72,104 @@ window.Chart = Chart;
               text: 'capacity'
             }
           },
-        },
+        }, 
+      }
+      };
+    },
+
+    mounted() {   
+      this.renderChart()   
+    },   
+    beforeDestroy() {   
+      this.destroyChart()   
+    },   
+  
+    methods: {
+      onFileChange(e) {
+        const file = e.target.files[0];
+        this.file = file;
+        // Read the Excel file using XLSX library.
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const binaryString = e.target.result;
+          const wb = XLSX.read(binaryString, {type: 'binary'});
+          this.sheetName = wb.SheetNames[0];
+          this.data = XLSX.utils.sheet_to_json(wb.Sheets[this.sheetName]);
+          // 清空一次points数据
+          this.points = [];
+          this.keyPoints = [];
+            for (const row of this.data) {
+            // const x = moment(row['time']).format('YYYY-MM-DD HH:mm:ss');
+            const x = row['time'];
+            const y = row['capacity'];
+            this.points.push([x, y]);
+            // 获取满电和低电量的值
+            if(y === 100 || y<= 5){
+              this.keyPoints.push([x, y]);
+            }
+            };
+            // 处理高低电量的点
+            for (let i = this.keyPoints.length - 2; i > 0; i--) {  
+              let nowValue = this.keyPoints[i][1];
+              let lastValue = this.keyPoints[i-1][1];
+              let nextValue = this.keyPoints[i+1][1];
+              if(nowValue === 100){
+                if(lastValue === 100 && nextValue === 100){
+                  this.keyPoints.slice(i,1);
+                }
+              }else if(lastValue === 100){
+                if(nowValue >= nextValue){
+                  this.keyPoints.slice(i,1)
+                }
+              }else if(nextValue === 100){
+                if(nowValue >= lastValue){
+                  this.keyPoints.slice(i,1)
+                }
+              }else if(lastValue !== 100 && nextValue !== 100){
+                if(nowValue >= nextValue){
+                  this.keyPoints.slice(i,1)
+                }
+              }
+            }  
+            // console.log(this.points);
+            let keyPoints = '';
+            this.keyPoints.forEach(element => {
+              keyPoints += element[0]+":"+element[1]+"\n";
+            });
+            this.chartlabelnow = this.points[0][0] + '   -   '+this.points[this.points.length-1][0] + '\n' + keyPoints;
+            console.log(this.chartlabelnow);
+            this.updateChart();
+            };
+        reader.readAsBinaryString(file);
       },
-    });
-  },
+      renderChart() {
+      // Get the context of the Chart.js canvas element we want to select.
+      // const ctx = document.getElementById('myChart').getContext('2d');
+      const ctx = this.$refs.myChart.getContext('2d') 
+      // Create a new Chart object with the retrieved canvas context.
+      this.chart = new Chart(ctx, {
+        type:"scatter",
+        data:this.chartData,
+        options:this.chartOptions,
+      });
+    },
+      /* 更新图表 */   
+      updateChart() {   
+        if (this.chart) {   
+          this.chart.destroy();   
+          console.log("清空图表")
+        }   
+        this.chartData.datasets[0].data = this.points;
+        this.chartData.datasets[0].label = this.chartlabelnow;
+        this.renderChart();   
+      },   
+      /* 销毁图表 */   
+      destroyChart() {   
+        if (this.chart) {   
+          this.chart.destroy()   
+          this.chart = null   
+        }   
+      }   
 },
 };
   </script>
