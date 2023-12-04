@@ -16,6 +16,7 @@ import HelloWorld from './components/HelloWorld.vue'
         <RouterLink to="/QRcodeGenerater">二维码生成</RouterLink>
         <RouterLink to="/charGenerater">随机字符生成</RouterLink>
         <RouterLink to="/matplot">图像绘制</RouterLink>
+        <!-- <RouterLink to="/fileProcess">文件处理</RouterLink> -->
       </nav>
     </div>
   </header>
