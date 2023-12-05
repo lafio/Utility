@@ -61,10 +61,21 @@ export default{
           const exlname = workbook.SheetNames[0]
           const worksheet = workbook.Sheets[exlname]
 
+          // 处理缺陷ID，提取超链接
+          const hyperlinks = [];
+          const range = XLSX.utils.decode_range(worksheet['!ref']);
+          for (let R = range.s.r; R <= range.e.r; ++R) {
+            const cellAddress = XLSX.utils.encode_cell({ r: R, c: 0 }); // 指定为第一列（索引为 0）
+            if (worksheet[cellAddress] && worksheet[cellAddress].l) {
+              const hyperlink = worksheet[cellAddress].l.Target;
+              hyperlinks.push(hyperlink);
+            }
+          }
+
           const exl = XLSX.utils.sheet_to_json(worksheet) // 生成json表格内容
 
-          //数据处理
-          var result_sheet=trans(templateJSON,exl)  // （模板js变量，目标json）
+          //数据处理 (模板json,缺陷列表,超链接数组)
+          var result_sheet=trans(templateJSON,exl,hyperlinks)  // （模板js变量，目标json）
 
           alert('数据转换完成，即将开始下载！')
           //下载数据
@@ -80,7 +91,7 @@ export default{
           // console.log(arr)
 
         } catch (e) {
-          console.log('error'+e)
+          console.log('error:'+e)
           return false
         }
       }

@@ -4,7 +4,7 @@ import * as XLSX from "xlsx"
 //数据处理：
 //1、读取模板文件
 //2、抽取目标数据放到模板文件里，返回成果sheet
-export function trans(templateJSON,exljson){
+export function trans(templateJSON,exljson,hyperlinks){
     // 筛选出“检出活动”为“系统测试”和“软件集成测试”的内容
     var exl_origin = exljson.filter(function(e){
         return e['检出活动']=='软件集成测试'
@@ -17,20 +17,20 @@ export function trans(templateJSON,exljson){
         || e['缺陷状态']=='Delay/Can not reproduce'
     })
     for(var i=1;i<=exl.length;i++){
-        console.log(exl[i-1]['缺陷ID'])
+        // console.log(exl[i-1]['缺陷ID'])
         var temp={
             "缺陷验证系统测试用例": 'qxyz'+i,
             "__EMPTY": exl[i-1]['测试环境'],
             "__EMPTY_1": exl[i-1]['测试模块'],
             "__EMPTY_2": exl[i-1]['测试模块'],
-            "__EMPTY_3": '',
+            "__EMPTY_3": exl[i-1]['标题'].slice(0,40),
             "__EMPTY_4": '',
             "__EMPTY_5": '',
-            "__EMPTY_6": '',
+            "__EMPTY_6": 'L2',
             "__EMPTY_7": '',
-            "__EMPTY_8": exl[i-1]['标题']+'\n\n'+exl[i-1]['缺陷ID'],
+            "__EMPTY_8": exl[i-1]['标题']+'\n\n'+hyperlinks[i-1],
             "__EMPTY_9": '',
-            "__EMPTY_10": ''
+            "__EMPTY_10": exl[i-1]['标题']+'\n\n'+exl[i-1]['缺陷ID']
         }
         templateJSON.push(temp)
     }
