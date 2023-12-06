@@ -9,7 +9,7 @@
     :on-exceed="handleExceed"
   >
   <div style="font-size: 16px; color: blue;">
-      缺陷转用例工具
+      用例检查工具
     </div>
     <img alt="upload logo" class="logo" src="@/assets/upload.svg" width="125" height="125" />
     <div class="el-upload__text">
@@ -19,9 +19,8 @@
       <div class="el-upload__tip">
         <h3>
           使用说明<br /><br />
-          1、从你的项目OA中导出缺陷列表，内容选择全部即可，得到缺陷列表.XLSX <br /><br /> 
-          2、将缺陷列表.XLSX上传到这里  <br /> <br /> 
-          3、等待2-3秒后，你要的用例会自动下载。注意：需要你使用excel打开该文件并保存一次后，才能上传ET
+          上传用例文件，工具会做以下处理：<br />
+          1、
         </h3>
       </div>
     </template>
@@ -29,9 +28,9 @@
 </template>
 
 <script>
+import {tableHead} from './tableHead.js'
 import * as XLSX from 'xlsx'
-import {templateJSON} from './template.js'
-import {sheet2blob,openDownloadDialog,trans} from './exportFunc.js'
+import {sheet2blob,openDownloadDialog} from './exportFunc.js'
 
 
 export default{
@@ -64,25 +63,37 @@ export default{
           const exlname = workbook.SheetNames[0]
           var worksheet = workbook.Sheets[exlname]
 
-          // 处理缺陷ID，提取超链接
-          const range = XLSX.utils.decode_range(worksheet['!ref']);
-          for (let R = range.s.r; R <= range.e.r; ++R) {
-            const cellAddress = XLSX.utils.encode_cell({ r: R, c: 0 }); // 指定为第一列（索引为 0）
-            if (worksheet[cellAddress] && worksheet[cellAddress].l) {
-              const hyperlink = worksheet[cellAddress].l.Target;
-              worksheet[cellAddress].v = hyperlink;
+          const cells = XLSX.utils.decode_range(worksheet['!ref']);
+          for (let R = cells.s.r; R <= cells.e.r; ++R) {
+            for (let C = cells.s.c; C <= cells.e.c; ++C) {
+              // 在这里处理每一列的数据
+              const cellAddress = XLSX.utils.encode_cell({ r: R, c: C }); 
+              if(R == 6){
+                if(tableHead.indexOf(worksheet[cellAddress].v) == -1){
+                  console.log("表头存在错误数据！");
+                  alert("表头存在错误数据！");
+                  return false;
+                }
+              }else if(R >=7){
+                console.log(worksheet[cellAddress].v);
+                if(worksheet[cellAddress].v == null){
+                  console.log("存在空数据！");
+                }
+              }
+          //   if (worksheet[cellAddress] && worksheet[cellAddress].l) {
+          //     const hyperlink = worksheet[cellAddress].l.Target;
+          //     worksheet[cellAddress].v = hyperlink;
               // console.log(worksheet[cellAddress]);
             }
           }
+          console.log(tableHead)
+          // const exl = XLSX.utils.sheet_to_json(worksheet) // 生成json表格内容
 
-          const exl = XLSX.utils.sheet_to_json(worksheet) // 生成json表格内容
-
-          //数据处理 (模板json,缺陷列表)
-          var result_sheet=trans(templateJSON,exl)  // （模板js变量，目标json）
+          // //数据处理 (模板json,缺陷列表)
+          // var result_sheet=trans(templateJSON,exl)  // （模板js变量，目标json）
 
           //下载数据
-
-          openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'result.xlsx')
+          openDownloadDialog(sheet2blob(worksheet,'缺陷验证'),'result.xlsx')
 
           alert('数据转换完成，已下载！')
 
