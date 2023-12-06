@@ -4,7 +4,7 @@ import * as XLSX from "xlsx"
 //数据处理：
 //1、读取模板文件
 //2、抽取目标数据放到模板文件里，返回成果sheet
-export function trans(templateJSON,exljson,hyperlinks){
+export function trans(templateJSON,exljson){
     // 筛选出“检出活动”为“系统测试”和“软件集成测试”的内容
     var exl_origin = exljson.filter(function(e){
         return e['检出活动']=='软件集成测试'
@@ -28,9 +28,10 @@ export function trans(templateJSON,exljson,hyperlinks){
             "__EMPTY_5": '',
             "__EMPTY_6": 'L2',
             "__EMPTY_7": '',
-            "__EMPTY_8": exl[i-1]['标题']+'\n\n'+hyperlinks[i-1],
+            "__EMPTY_8": exl[i-1]['标题']+'\n\n'+exl[i-1]['缺陷ID'],
             "__EMPTY_9": '',
-            "__EMPTY_10": exl[i-1]['标题']+'\n\n'+exl[i-1]['缺陷ID']
+            "__EMPTY_10": exl[i-1]['标题']+'\n\n'+exl[i-1]['缺陷ID'],
+            "__EMPTY_11":'手动'
         }
         templateJSON.push(temp)
     }

@@ -32,10 +32,11 @@ export var templateJSON = [
         "__EMPTY_8": "测试步骤",
         "__EMPTY_9": "测试数据",
         "__EMPTY_10": "预期结果",
-        "__EMPTY_11": "P/F/NT/Delay",
-        "__EMPTY_12": "缺陷严重级",
-        "__EMPTY_13": "实际测试结果",
-        "__EMPTY_14": "备注"
+        "__EMPTY_11": "执行方式",
+        "__EMPTY_12": "P/F/NT/Delay",
+        "__EMPTY_13": "缺陷严重级",
+        "__EMPTY_14": "实际测试结果",
+        "__EMPTY_15": "备注"
     }
 ]
 
