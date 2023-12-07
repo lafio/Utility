@@ -32,7 +32,6 @@ import {tableHead} from './tableHead.js'
 import * as XLSX from 'xlsx'
 import {sheet2blob,openDownloadDialog} from './exportFunc.js'
 
-
 export default{
   methods: {
     beforeRemove (file, fileList) {
@@ -52,7 +51,7 @@ export default{
       }
       const fileReader = new FileReader()
       fileReader.onload = (ev) => {
-        try {
+        // try {
           const data = ev.target.result
           const workbook = XLSX.read(data, {
             // 以字符编码的方式解析
@@ -68,16 +67,18 @@ export default{
             for (let C = cells.s.c; C <= cells.e.c; ++C) {
               // 在这里处理每一列的数据
               const cellAddress = XLSX.utils.encode_cell({ r: R, c: C }); 
+              var cell = worksheet[cellAddress]
               if(R == 6){
-                if(tableHead.indexOf(worksheet[cellAddress].v) == -1){
+                if(tableHead.indexOf(cell.v) == -1){
                   console.log("表头存在错误数据！");
                   alert("表头存在错误数据！");
                   return false;
                 }
               }else if(R >=7){
-                console.log(worksheet[cellAddress].v);
-                if(worksheet[cellAddress].v == null){
-                  console.log("存在空数据！");
+                console.log(1234);
+                if(cell){
+                  // console.log("存在空数据！");
+                  cell.s = { fill: { fgColor: { rgb: 'FF0000' } } }
                 }
               }
           //   if (worksheet[cellAddress] && worksheet[cellAddress].l) {
@@ -105,10 +106,10 @@ export default{
           // console.log("----print array----")
           // console.log(arr)
 
-        } catch (e) {
-          console.log('error:'+e)
-          return false
-        }
+        // } catch (e) {
+        //   console.log('error:'+e)
+        //   return false
+        // }
       }
       fileReader.readAsBinaryString(file)
     },
