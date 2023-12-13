@@ -22,6 +22,7 @@ import HelloWorld from './components/HelloWorld.vue'
   </header>
 
   <RouterView class="routerCSS"/>
+  <div class="version-watermark">版本: 2023-12-13</div>
 </template>
 
 <style scoped>
@@ -89,5 +90,17 @@ nav a:first-of-type {
 }
 .routerCSS{
   margin-top:20px;
+}
+
+.version-watermark {
+  position: fixed;
+  bottom: 16px; /* 根据需要调整与底部的距离 */
+  right: 16px; /* 根据需要调整与右侧的距离 */
+  opacity: 0.5; /* 调整透明度 */
+  font-size: 14px; /* 根据需要调整字体大小 */
+  color: #fff; /* 可以根据需要更改文字颜色 */
+  background-color: rgba(0, 0, 0, 0.5); /* 设置背景颜色并调整透明度 */
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 </style>
