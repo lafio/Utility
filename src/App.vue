@@ -13,7 +13,6 @@ import HelloWorld from './components/HelloWorld.vue'
       <nav>
         <RouterLink to="/">主页</RouterLink>
         <RouterLink to="/translater">缺陷转用例</RouterLink>
-        <RouterLink to="/testcaseCheck">用例检查</RouterLink>
         <RouterLink to="/QRcodeGenerater">二维码生成</RouterLink>
         <RouterLink to="/charGenerater">随机字符生成</RouterLink>
         <RouterLink to="/matplot">图像绘制</RouterLink>

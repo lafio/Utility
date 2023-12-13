@@ -15,11 +15,6 @@ const router = createRouter({
       component: () => import('../views/translater.vue')
     },
     {
-      path: '/testcaseCheck',
-      name: 'testcaseCheck',
-      component: () => import('../views/testcaseCheck.vue')
-    },
-    {
       path: '/QRcodeGenerater',
       name: 'QRcodeGenerater',
       // route level code-splitting

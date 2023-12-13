@@ -33,14 +33,13 @@ import * as XLSX from 'xlsx'
 import {templateJSON} from './template.js'
 import {sheet2blob,openDownloadDialog,trans} from './exportFunc.js'
 
-
 export default{
   methods: {
     beforeRemove (file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+      return this.$confirm(`确定移除 ${file.name}？`);
     },
     handleExceed (files, fileList) {
-      this.$message.warning(`最多导入 1 个文件，请刷新页面来导入新的文件！！`)
+      this.$message.warning(`最多导入 1 个文件，请刷新页面来导入新的文件！！`);
     },
     httpRequest (e) {
       let file = e.file // 文件信息
@@ -61,8 +60,8 @@ export default{
           })
           // 取第一张表
 
-          const exlname = workbook.SheetNames[0]
-          var worksheet = workbook.Sheets[exlname]
+          const exlname = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[exlname];
 
           // 处理缺陷ID，提取超链接
           const range = XLSX.utils.decode_range(worksheet['!ref']);
@@ -75,17 +74,17 @@ export default{
             }
           }
 
-          const exl = XLSX.utils.sheet_to_json(worksheet) // 生成json表格内容
+          const exl = XLSX.utils.sheet_to_json(worksheet); // 生成json表格内容
 
           //数据处理 (模板json,缺陷列表)
-          var result_sheet=trans(templateJSON,exl)  // （模板js变量，目标json）
+          var result_sheet=trans(templateJSON,exl); // （模板js变量，目标json）
 
           //下载数据
-
-          openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'result.xlsx')
-
-          alert('数据转换完成，已下载！')
-
+          openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'result.xlsx');
+          
+          // 显示一条成功消息并自动关闭
+          this.$message.success("用例转换完成，已下载！")
+          
           // 将 JSON 数据挂到 data 里
           // let arr = []
           // exl.forEach(item => {
@@ -110,3 +109,9 @@ export default{
 }
 
 </script>
+
+<css>
+.el-message__content {
+  font-size: 2em; /* 根据需要调整字体大小 */
+}
+</css>

@@ -103,7 +103,7 @@ window.Chart = Chart;
             for (const row of this.data) {
             // const x = moment(row['time']).format('YYYY-MM-DD HH:mm:ss');
             const x = row['time'];
-            const y = row['capacity'];
+            const y = row['capacity'] || row['currentVolume'];
             this.points.push([x, y]);
             // 获取满电和低电量的值
             if(y == 100 || y<= 5){
