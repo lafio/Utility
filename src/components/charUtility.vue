@@ -1,4 +1,6 @@
 <template>
+<div class = "container">
+<div>
 <transition name="fade">
    <div v-if="showCopied" class="copied">已复制</div>
 </transition>
@@ -14,15 +16,28 @@
     <label>打乱顺序</label>
 </div>
 <div>
-    <p>字符长度</p>
-    <input v-model="numLen" type="number" placeholder="请输入字符长度">
+    <p>字符串长度</p>
+    <input v-model="numLen" type = "number" placeholder="请输入字符串长度">
+</div>
+<div>
+<p>汉语词库</p><input type="text" v-model="chineseText" placeholder="chineseText" />
 </div>
 <el-button @click="generateRandomStr()" 
-style="margin-top: 20px; margin-bottom: 20px;">生成随机字符</el-button>
-
+style="margin-top: 20px; margin-bottom: 20px;">生成随机字符串</el-button>
+</div>
+<div class= "myQRcodeclass" v-if="enableShuffle">
+      <qrcode-vue :value="randomStr" :size="QRsize" level="H" 
+      :style="{border:'20px solid white'}" @click="copyText"></qrcode-vue>
+  </div>
+  <div class= "myQRcodeclass" v-if="!enableShuffle">
+      <qrcode-vue :value="notRandomStr" :size="QRsize" level="H" 
+      :style="{border:'20px solid white'}" @click="copyText"></qrcode-vue>
+  </div>
+</div>
 </template>
 
 <script>
+import QrcodeVue from "qrcode.vue";
 
 function shuffle(str) {
   var arr = str.split('');
@@ -45,7 +60,7 @@ function getRandomS(charOrigin,g){
   //console.log('====='+charWeNeed)
   return charWeNeed;
 }
-function randomString(len,aa) {
+function randomString(len,aa,chineseText) {
   len = len || 32;
   let sum = aa.reduce((a, b) => a + b);
   let t = Math.floor(len / sum)
@@ -56,7 +71,7 @@ function randomString(len,aa) {
   const $big = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const $small = 'abcdefhijkmnopqrstuvwxyz'
   const $num = '1234567890'
-  const $chinese = '落霞与孤鹜齐飞秋水共长天一色'
+  const $chinese = chineseText
   const $symbol = '~!@#$%^&*()_+-={}[]|;:,.<>?'
   const $kong = ' ' 
   let result = ''
@@ -81,21 +96,26 @@ function randomString(len,aa) {
 
 
 export default {
+  components: {
+    QrcodeVue,
+  },
   data() {
     return {
+      QRsize: 250,
       randomStr: '',
       notRandomStr:'',
       numLen:32,
       showCopied: false,
       enableShuffle: false,
       aaa: [1, 1, 1, 1, 1, 0],
-      names:['大写字母','小写字母','数字','中文','符号','空格']
+      names:['大写字母','小写字母','数字','中文','符号','空格'],
+      chineseText:'长风破浪会有时'
     };
   },
   methods: {
     generateRandomStr() {
       console.log(this.aaa)
-      var list_result = randomString(this.numLen,this.aaa);
+      var list_result = randomString(this.numLen,this.aaa,this.chineseText);
       this.notRandomStr = list_result[0]
       this.randomStr = list_result[1]
       console.log(this.notRandomStr.length)
@@ -117,6 +137,16 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.myQRcodeclass {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .resultStyle {
   font-size: 25px;
   white-space: nowrap;

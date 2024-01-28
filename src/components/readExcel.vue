@@ -83,7 +83,7 @@ export default{
           openDownloadDialog(sheet2blob(result_sheet,'缺陷验证'),'result.xlsx');
           
           // 显示一条成功消息并自动关闭
-          this.$message.success("用例转换完成，已下载！")
+          this.$message.success("用例转换完成，正在下载！")
           
           // 将 JSON 数据挂到 data 里
           // let arr = []

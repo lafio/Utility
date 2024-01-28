@@ -36,6 +36,14 @@ export function trans(templateJSON,exljson){
         templateJSON.push(temp)
     }
     var resultSheet = XLSX.utils.json_to_sheet(templateJSON)
+
+    // 将__EMPTY 这种数据置空
+    var cellAddresses = ['B1','C1','D1','E1','F1','G1','H1','I1','J1','K1','L1','M1','N1','O1','P1','Q1'];
+    cellAddresses.forEach(function(address) {
+        var range = XLSX.utils.decode_cell(address);
+        // 清空单元格的内容
+        resultSheet[XLSX.utils.encode_cell(range)] = {};
+      });
     return resultSheet;
 }
 
