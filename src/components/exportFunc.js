@@ -31,14 +31,15 @@ export function trans(templateJSON,exljson){
             "__EMPTY_8": exl[i-1]['标题']+'\n\n'+exl[i-1]['缺陷ID'],
             "__EMPTY_9": '',
             "__EMPTY_10": exl[i-1]['标题']+'\n\n'+exl[i-1]['缺陷ID'],
-            "__EMPTY_11":'手动'
+            "__EMPTY_11":'手动',
+            "__EMPTY_16":'功能性用例'
         }
         templateJSON.push(temp)
     }
     var resultSheet = XLSX.utils.json_to_sheet(templateJSON)
 
     // 将__EMPTY 这种数据置空
-    var cellAddresses = ['B1','C1','D1','E1','F1','G1','H1','I1','J1','K1','L1','M1','N1','O1','P1','Q1'];
+    var cellAddresses = ['B1','C1','D1','E1','F1','G1','H1','I1','J1','K1','L1','M1','N1','O1','P1','Q1','R1'];
     cellAddresses.forEach(function(address) {
         var range = XLSX.utils.decode_cell(address);
         // 清空单元格的内容
