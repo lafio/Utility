@@ -22,7 +22,7 @@ import HelloWorld from './components/HelloWorld.vue'
   </header>
 
   <RouterView class="routerCSS"/>
-  <div class="version-watermark">版本: 2024-01-28</div>
+  <div class="version-watermark">版本: 2024-02-19</div>
 </template>
 
 <style scoped>
